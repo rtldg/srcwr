@@ -3,18 +3,8 @@
 
 #include <sourcemod>
 #include <convar_class>
-#include <adt_trie> // StringMap
 #include <shavit>
-
-#define USE_RIPEXT 1
-#if USE_RIPEXT
 #include <ripext> // https://github.com/ErikMinekus/sm-ripext
-#else
-#include <json> // https://github.com/clugg/sm-json
-#include <SteamWorks> // HTTP stuff
-#endif
-
-#define USERAGENT "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_9_3) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/35.0.1916.47 Safari/537.36 srcwr/1.0 (https://github.com/rtldg/srcwr)"
 
 public Plugin myinfo = {
 	name = "srcwr",
@@ -24,12 +14,10 @@ public Plugin myinfo = {
 	url = "https://github.com/rtldg/srcwr"
 }
 
-// TODO: Output run info as KeyValues-format or JSON...
 // TODO: Setup multi-replay system for trikz support...
 // TODO: Tagteam support... multiple steamids & usernames...
 	// probably implemented in another file that has player changes at ticks for the replay file...
 // TODO: Determining/collapsing compatible zones...
-// TODO: Have every API request put in the GetTime() so the server can determine the offset and store dates as UTC...
 
 Convar gCV_APIKey;
 Convar gCV_APIUrl;
