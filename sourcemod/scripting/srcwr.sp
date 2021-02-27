@@ -85,7 +85,7 @@ public void OnLibraryRemoved(const char[] name)
 	}
 }
 
-public Action Shavit_ShouldSaveReplayCopy(int client, int style, float time, int jumps, int strafes, float sync, int track, float oldtime, float perfs, int timestamp, bool isWR, bool isTooLong)
+public Action Shavit_ShouldSaveReplayCopy(int client, int style, float time, int jumps, int strafes, float sync, int track, float oldtime, float perfs, float avgvel, float maxvel, int timestamp, bool isWR, bool isTooLong)
 {
 	if (gCV_Enabled.IntValue >= 2)
 	{
@@ -95,7 +95,7 @@ public Action Shavit_ShouldSaveReplayCopy(int client, int style, float time, int
 	return Plugin_Continue;
 }
 
-public void Shavit_OnFinish(int client, int style, float time, int jumps, int strafes, float sync, int track, float oldtime, float perfs, /* float avgvel, float maxvel, */ int timestamp)
+public void Shavit_OnFinish(int client, int style, float time, int jumps, int strafes, float sync, int track, float oldtime, float perfs, float avgvel, float maxvel, int timestamp)
 {
 	if (gCV_Enabled.IntValue < 1)
 		return;
@@ -148,8 +148,8 @@ public void Shavit_OnFinish(int client, int style, float time, int jumps, int st
 	Shavit_GetStyleSetting(style, "name", tmp, sizeof(tmp));
 	json.SetString("server_style_name", tmp);
 
-	//json.SetFloat("velocity_avg", avgvel);
-	//json.SetFloat("velocity_max", maxvel);
+	json.SetFloat("velocity_avg", avgvel);
+	json.SetFloat("velocity_max", maxvel);
 	//json.SetInt("checkpointsUsed", Shavit_GetTimesTeleported(client));
 
 	json.SetBool("autobhop", Shavit_GetStyleSettingBool(style, "autobhop"));
@@ -222,7 +222,7 @@ public void Shavit_OnFinish(int client, int style, float time, int jumps, int st
 	json.ToFile(outPath);
 }
 
-public void Shavit_OnReplaySaved(int client, int style, float time, int jumps, int strafes, float sync, int track, float oldtime, float perfs, int timestamp, bool isWR, bool isTooLong, bool isCopy, const char[] path)
+public void Shavit_OnReplaySaved(int client, int style, float time, int jumps, int strafes, float sync, int track, float oldtime, float perfs, float avgvel, float maxvel, int timestamp, bool isWR, bool isTooLong, bool isCopy, const char[] path)
 {
 	PrintToChatAll("replay saved at %s", path);
 }
