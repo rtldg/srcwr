@@ -85,17 +85,24 @@ public void OnLibraryRemoved(const char[] name)
 	}
 }
 
-public Action Shavit_ShouldSaveReplayCopy(int client, int style, float time, int jumps, int strafes, float sync, int track, float oldtime, float perfs, float avgvel, float maxvel, int timestamp, bool isWR, bool isTooLong)
+bool ShouldSaveReplayCopy(bool iswr)
 {
 	if (gCV_Enabled.IntValue >= 2)
 	{
-		if (gCV_Enabled.IntValue >= 3 || isWR)
-			return Plugin_Changed;
+		if (gCV_Enabled.IntValue >= 3 || iswr)
+			return true;
 	}
+	return false;
+}
+
+public Action Shavit_ShouldSaveReplayCopy(int client, int style, float time, int jumps, int strafes, float sync, int track, float oldtime, float perfs, float avgvel, float maxvel, int timestamp, bool iswr, bool istoolong)
+{
+	if (ShouldSaveReplayCopy(iswr))
+		return Plugin_Changed;
 	return Plugin_Continue;
 }
 
-public void Shavit_OnFinish(int client, int style, float time, int jumps, int strafes, float sync, int track, float oldtime, float perfs, float avgvel, float maxvel, int timestamp)
+void Shavit_OnFinish_Post(int client, int style, float time, int jumps, int strafes, float sync, int rank, int overwrite, int track, float oldtime, float perfs, float avgvel, float maxvel, int timestamp)
 {
 	if (gCV_Enabled.IntValue < 1)
 		return;
@@ -116,6 +123,8 @@ public void Shavit_OnFinish(int client, int style, float time, int jumps, int st
 
 	hostname.GetString(tmp, sizeof(tmp));
 	json.SetString("serverName", tmp);
+
+	json.SetBool("hasReplay", ShouldSaveReplayCopy(rank == 1));
 
 	// TODO: Not needed? Just calc ticks as "time / GetTickInterval()"? Or just grab from replay file?
 	/*
