@@ -102,7 +102,7 @@ public Action Shavit_ShouldSaveReplayCopy(int client, int style, float time, int
 	return Plugin_Continue;
 }
 
-public void Shavit_OnFinish_Post(int client, int style, float time, int jumps, int strafes, float sync, int rank, int overwrite, int track, float oldtime, float perfs, float avgvel, float maxvel, int timestamp)
+public void Shavit_OnFinish(int client, int style, float time, int jumps, int strafes, float sync, int track, float oldtime, float perfs, float avgvel, float maxvel, int timestamp)
 {
 	if (gCV_Enabled.IntValue < 1)
 		return;
@@ -123,8 +123,6 @@ public void Shavit_OnFinish_Post(int client, int style, float time, int jumps, i
 
 	hostname.GetString(tmp, sizeof(tmp));
 	json.SetString("serverName", tmp);
-
-	json.SetBool("hasReplay", ShouldSaveReplayCopy(rank == 1));
 
 	// TODO: Not needed? Just calc ticks as "time / GetTickInterval()"? Or just grab from replay file?
 	/*
@@ -159,7 +157,7 @@ public void Shavit_OnFinish_Post(int client, int style, float time, int jumps, i
 
 	json.SetFloat("velocity_avg", avgvel);
 	json.SetFloat("velocity_max", maxvel);
-	//json.SetInt("checkpointsUsed", Shavit_GetTimesTeleported(client));
+	json.SetInt("checkpointsUsed", Shavit_GetTimesTeleported(client));
 
 	json.SetBool("autobhop", Shavit_GetStyleSettingBool(style, "autobhop"));
 	json.SetBool("easybhop", Shavit_GetStyleSettingBool(style, "easybhop"));
